@@ -1,0 +1,125 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Data.EntityModel;
+@inject SignInManager<Korisnik> SignInManager
+@inject UserManager<Korisnik> UserManager
+@inject Data.ApplicationDbContext context
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+
+@{
+    var logged = User.Identity.Name;
+    var ko = UserManager.Users.Where(u => u.Email == User.Identity.Name);
+
+}
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("SuperAdmin"))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            UPRAVLJANJE
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a asp-action="ListUsers" asp-controller="Administration" class="dropdown-item">Korisnici</a>
+            <a asp-action="ListRoles" asp-controller="Administration" class="dropdown-item">Uloge</a>
+        </div>
+    </li>
+}
+else if (SignInManager.IsSignedIn(User) && User.IsInRole("Novinar"))
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Novosti" asp-action="Prikaz">NOVOSTI</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Novosti" asp-action="DodajUredi">DODAJ NOVOST</a>
+    </li>
+}
+else if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrator_Igraca"))
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Igrac" asp-action="Prikaz">PODEŠAVANJA</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Igrac" asp-action="DodajUredi">DODAJ IGRAČA</a>
+    </li>
+
+}
+else if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrator_Utakmica"))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link text-dark" href="/Utakmica/Index">TAKMIČENJA</a>
+
+    </li>
+}
+else if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Novosti" asp-action="Prikaz">
+            NOVOSTI
+            <span class="noti badge" style=" background-color: #EFC809;">
+                <span class="count-noti">@(ko.FirstOrDefault().brojNotifikacija)</span>
+            </span>
+        </a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link text-dark" href="/Utakmica/Index">TAKMIČENJA</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link text-dark" href="/Igrac/Prikaz">IGRAČI</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link text-dark" href="#">KLUBOVI</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link text-dark" href="#">STADIONI</a>
+    </li>
+
+    <li>
+        <div class="notification-icon" style="margin-top:10px">
+            <span class="glyphicon glyphicon-envelope"></span>
+            <span class="badge" id="ntCnt"></span>
+        </div>
+    </li>
+}
+<script>
+    var myhub = new signalR.HubConnectionBuilder().withUrl("/myhub").build();
+
+    function resetCountKorisnik() {
+        $.ajax({
+            url: '/Novosti/ResetCountKorisnik',
+            type: 'GET',
+            data: { Email: "@logged" },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    };
+
+    $("span.badge").click(function (e) {
+        e.stopPropagation();
+        var count = 0;
+        count = parseInt($('span.count-noti').html()) || 0;
+        $('span.count', this).html('0');
+        resetCountKorisnik();
+    });
+
+
+    function updateNotificationCount() {
+        var count = 0;
+        count = parseInt($("span.count-noti").html()) || 0;
+        count++;
+        $("span.count-noti").html(count);
+    }
+
+    myhub.start().then(function () {
+        console.info("started signalR hub");
+
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    myhub.on("prijemPoruke", function (message) {
+        if (message == "dodanaNovost") {
+            updateNotificationCount();
+        }
+    });
+
+        </script>

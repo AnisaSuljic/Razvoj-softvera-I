@@ -1,0 +1,24 @@
+﻿<link rel="stylesheet" href="~/css/StyleSheet.css">
+
+@{
+}
+@model NovostiDetaljiVM.NovostiRed
+
+<body>
+
+    <div id="ostatak-parenta">
+        <div class="detalji-Clanka">
+            <div class="slika-calnka">
+                <img src="~/upload/@Model.slika" alt="Slika clanka-Vijest1" />
+
+            </div>
+            <h3>@Model.NaslovNovosti</h3>
+            <p>@Model.SadrzajNovosti</p><br />
+            <span style="float:right;">@Model.DatumObjaveNovosti</span>
+
+        </div>
+    </div>
+    <a href="/Report/Index?ID=@Model.IDnovosti">
+        <img src="~/img/printer.png" style="width:30px;bottom:15px;right:15px;position:absolute" />
+    </a>
+</body>

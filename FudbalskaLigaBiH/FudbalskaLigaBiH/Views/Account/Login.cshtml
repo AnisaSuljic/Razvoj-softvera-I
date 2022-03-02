@@ -1,0 +1,49 @@
+﻿@using FudbalskaLigaBiH.Models
+<link href="~/css/Account.css" rel="stylesheet" />
+@model LoginViewModel
+
+@{ ViewData["Title"] = "Register"; }
+
+<br />
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="OkvirLogina" style="text-align:center;">
+                <section>
+                    <h3>Prijava</h3>
+                    <h6>Molimo da unesete Vaš Email i lozinku</h6>
+                    <hr />
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group">
+                            <input id="Email" name="Email" asp-for="Email" class="form-control" type="email" 
+                                   data-val="true" data-val-required="Email polje je obavezno." placeholder="Email"/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input id="Password" name="Password" asp-for="Password" class="form-control"
+                                   type="password" data-val="true" data-val-required="Lozinka polje je obavezno." placeholder="Lozinka" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <input asp-for="RememberMe" />
+                                <label>Zapamti me</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input id="btn1" type="submit" class="form-control" value="Prijava" />
+                        </div>
+                        <div >
+                                <a class="linkAcc" asp-action="ForgotPassword">Zaboravljena lozinka?</a>
+                        </div>
+                        <div >
+                          
+                                <a class="linkAcc"asp-action="Register">Registruj se kao novi korisnik</a>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>

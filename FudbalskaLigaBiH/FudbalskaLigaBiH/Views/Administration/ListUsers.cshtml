@@ -1,0 +1,73 @@
+﻿@using Data.EntityModel;
+@using Microsoft.AspNetCore.Authorization
+<script src="~/js/site.js"></script>
+
+@model IEnumerable<Korisnik>
+
+
+
+@{
+    ViewBag.Title = "All Users";
+}
+
+<body>
+    <div class="container">
+        <br />
+        <h2>Svi korisnici</h2>
+        @if (Model.Any())
+        {
+            <a class="btn btn-warning mb-3" asp-controller="Account" asp-action="Register">
+                Kreiraj novog korisnika
+            </a>
+            foreach (var user in Model)
+            {
+                <div class="card mb-3">
+                    <div class="card-header">
+                        Korisnik ID: @user.Id
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@user.Ime @user.Prezime | @user.Email</h5>
+                    </div>
+                    <div class="card-footer">
+                        <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post">
+                            <a class="btn btn-outline-warning" asp-action="EditUser"
+                               asp-controller="Administration"
+                               asp-route-id="@user.Id">Uredi</a>
+                            <span id="PotvrdaBrisanjaSpan_@user.Id" style="display:none;">
+                                <span>Jeste li sigurni da želite obrisati?</span>
+                                <button type="submit" class="btn btn-warning">Da</button>
+                                <a class="btn btn-warning" onclick="PotvrdaBrisanja('@user.Id',false)">Ne</a>
+                            </span>
+
+                            <span id="spanBrisanje_@user.Id">
+                                <a class="btn btn-outline-warning" onclick="PotvrdaBrisanja('@user.Id',true)">Obriši</a>
+                            </span>
+
+                        </form>
+                    </div>
+                </div>
+
+            }
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-header">
+                    No users have been created yet.
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Klikni na dugme ispod za kreiranje korisnika:
+                    </h5>
+                    <a class="btn btn-primary" asp-controller="Account" asp-action="Register">
+                        Kreiraj novog korisnika
+                    </a>
+                </div>
+            </div>
+        }
+        <a>
+            <img src="~/img/printer.png" style="width:30px;bottom:15px;right:15px;position:absolute" />
+        </a>
+    </div>
+</body>
+

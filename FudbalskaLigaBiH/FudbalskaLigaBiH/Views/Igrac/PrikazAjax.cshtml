@@ -1,0 +1,59 @@
+﻿
+
+@model IgracPrikazAjaxVM
+
+<table class="table ">
+    <thead>
+        <tr>
+            <th>Slika</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Broj dresa</th>
+            <th>Pozicija</th>
+            <th>Klub</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (IgracPrikazAjaxVM.IgracRow x in Model.ListaIgraca)
+        {
+            <tr>
+                <td><img style="width:50px;" src="~/upload/@x.slika" alt="Slika-Igrac" /></td>
+                <td>@x.Ime</td>
+                <td>@x.Prezime</td>
+                <td>@x.BrojDresa</td>
+                <td>@x.Pozicija</td>
+                <td>@(@x.KlubNaziv==null?"Nije pridružen klubu":x.KlubNaziv)</td>
+                @if (User.IsInRole("Administrator_Igraca"))
+                {
+                    <td>
+                        <a class="btn btn-outline-warning" href="/Igrac/DodajUredi?id=@x.ID">Uredi</a>
+                        <a class="btn btn-outline-warning" data-target="#brisanjeModal" data-toggle="modal" href="#">Obriši</a>
+                    </td>
+                    <div class="modal" id="brisanjeModal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header"></div>
+                                <div class="modal-body">
+                                    <span>Jeste li sigurni da želite obrisati?</span>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-warning" href="/Igrac/Obrisi?NovostiID=@x.ID">Da</a>
+                                    <a class="btn btn-warning" data-dismiss="modal">Ne</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <td>
+                        <a class="btn btn-outline-warning" href="/Igrac/Detalji?id=@x.ID">Detalji</a>
+                    </td>
+                }
+            </tr>
+
+        }
+    </tbody>
+
+</table>
