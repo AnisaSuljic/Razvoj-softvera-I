@@ -1,6 +1,7 @@
 # Razvoj-softvera-I
 
 Projekat rađen iz predmeta Razvoj softvera I na temu Fudbalska liga BiH 
+
 AzureDevops -> https://dev.azure.com/fitba2036/seminarski_rad
 
 Login info:
